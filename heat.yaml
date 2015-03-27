@@ -1,0 +1,109 @@
+heat_template_version: 2013-05-23
+
+description: A simple template which creates a device template and a device
+
+parameters:
+
+    mgmt-if:
+        type: string
+        description : management Subnet
+        default : 30.0.0.0/24
+    private:
+        type: string
+        description: Packet-IN Subnet
+        default : 20.0.0.0/24
+    user-nw:
+        type: string
+        description : User Network
+        default : 40.0.0.0/24
+    name:
+        type: string
+        description: Name of the service
+        default : webservice
+    router:
+        type: string
+        description: Router name
+        default : Router
+    quality_of_service:
+        type: string
+        description: Quality of service
+        default : Silver
+
+    
+resources:
+    router_n:
+        type: OS::Neutron::Router
+        properties:
+            name:  { get_param: router }
+
+    network_m:
+        type: OS::Neutron::Net
+        properties: {name: management_interface}
+   
+    subnet_m:
+        type: OS::Neutron::Subnet
+        properties:
+            name : management_subnet
+            network_id: {Ref: network_m}
+            cidr: { get_param: mgmt-if }
+            ip_version: 4
+    
+    network_private:
+        type: OS::Neutron::Net
+        properties: {name: private}
+   
+    subnet_private:
+        type: OS::Neutron::Subnet
+        properties:
+            name : private_subnet
+            network_id: {Ref: network_private}
+            cidr: { get_param: private }
+            ip_version: 4
+
+    user_network:
+        type: OS::Neutron::Net
+        properties: {name: user-nw}
+
+    subnet_user:
+        type: OS::Neutron::Subnet
+        properties:
+            name : user_subnet
+            network_id: {Ref: user_network}
+            cidr: { get_param: user-nw }
+            ip_version: 4
+
+    router_intrfc_m:
+       type: OS::Neutron::RouterInterface
+       properties:
+           router_id: {Ref: router_n}
+           subnet_id: {Ref: subnet_m}
+
+    router_intrfc_u:
+       type: OS::Neutron::RouterInterface
+       properties:
+           router_id: {Ref: router_n}
+           subnet_id: {Ref: subnet_user}
+
+    user_instance:
+       type: OS::Nova::Server
+       properties:
+            name: user_vm
+            image: <update any desktop image-id>
+            flavor: <update flavor to launch user vm>
+            networks:
+              - port: { get_resource: user_port }
+
+    user_port:
+       type: OS::Neutron::Port
+       properties:
+            network_id: { get_resource: user_network }
+            fixed_ips:
+              - subnet_id: { get_resource: subnet_user }
+
+    service:
+        type: OS::VNFSvc::Service
+        properties:
+            name:  { get_param: name }
+            description: VNF Service
+            quality_of_service: { get_param: quality_of_service }
+            attributes: {'networks':{'mgmt-if': {get_attr: [subnet_m, network_id]}, 'private':{get_attr: [subnet_private, network_id]}, 'user-nw': {get_attr: [subnet_user, network_id]}}, 'router' : {get_param : router},'subnets':{'mgmt-if': {"Ref": "subnet_m"}, 'private':{"Ref": "subnet_private"}}, 'router_if': {'router_intrfc_m': {"Ref": "router_intrfc_m"}, 'router_intrfc_u': {"Ref": "router_intrfc_u"}}}
