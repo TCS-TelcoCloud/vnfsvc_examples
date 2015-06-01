@@ -71,7 +71,7 @@ vnfd:
             init: ""
             configure: ""
           vm-spec:
-            image: "<specify webserver.img path file exists in vnfsvc_examples directory>"
+            image: "<specify path to webserver image>"
             name: "webserver"
             disk_format: "raw"
             container_format: "bare"

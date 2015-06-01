@@ -48,7 +48,7 @@ vnfd:
               description: "Interface Used for management interface"
               connection-point-ref: "connection-points/mgmt-if"
               properties:
-                driver: 'vnfsvc.vnfmanager.drivers.lb_driver.LoadBalancerDriver'
+                driver: 'vnfmanager.drivers.haproxy_ncclient.LoadBalancerDriver'
             pkt-in:
               name: "pkt-in"
               description: "Packet in interface"
@@ -69,7 +69,7 @@ vnfd:
               init: ""
               configure: ""
           vm-spec:
-            image: "<Mention path to loadbalancer.img specifed in vnfsvc_examples directory>"
+            image: "<Mention path to loadbalancer image>"
             name: "haproxy"
             disk_format: "qcow2"
             container_format: "bare"
@@ -90,7 +90,7 @@ vnfd:
               description: "Interface Used for management interface"
               connection-point-ref: "connection-points/mgmt-if"
               properties:
-                driver: 'vnfsvc.vnfmanager.drivers.haproxy_ncclient.LoadBalancerDriver'
+                driver: 'vnfmanager.drivers.haproxy_ncclient.LoadBalancerDriver'
             pkt-in:
               name: "pkt-in"
               description: "Packet in interface"
