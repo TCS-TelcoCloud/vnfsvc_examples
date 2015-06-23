@@ -1,0 +1,90 @@
+Prerequisites for the deployment of Metaswitch Clearwater IMS:
+
+Step 1:  Build the images
+-------------------------
+
+Please refer to the below link “http://clearwater.readthedocs.org/en/latest/Manual_Install/index.html” and follow the steps mentioned in it for building the images of Clearwater IMS components.
+
+After building the images, the dynamic configuration needed for each IMS component when deployed through NFV can be done through NETCONF.
+
+Note:  We have deployed Clearwater IMS using NFV framework which comprises of Bono, Homer, Homestead, Sprout and Ellis.
+
+
+Step 2: NETCONF installation   
+----------------------------
+
+On each IMS node do the following:
+  - Clone the OpenYuma repository from “https://github.com/OpenClovis/OpenYuma”
+  - cd OpenYuma-master
+  - make
+  - sudo make install
+  - Edit /etc/ssh/sshd_config to add the following lines:
+      	Port 22
+        Port 830
+        Subsystem netconf /usr/sbin/netconf-subsystem
+  - Restart ssh service,   sudo /etc/init.d/ssh restart
+
+
+Step 3:  Building a library for Clearwater IMS
+----------------------------------------------
+
+Create a directory 'modules' and do the below steps in this directory
+
+Write a yang file (<ims_node>.yang) based on the configuration needed for each IMS nodes in OpenYuma-master/netconf/test/modules/yang. YANG is a data modeling language used to model configuration and state data manipulated by the NETCONF protocol
+
+Please refer to ims.yang under vnfsvc_examples/Ims
+
+Generate a header file for <ims_node>.yang
+      yangdump <ims_node>.yang --format=h --output=<ims_node>.h
+Generate C file from the yang data model
+      yangdump <ims_node>.yang --format=c --output=<ims_node>.c
+
+Modify the code according to the configuration required for the corresponding IMS component in <ims_node>.c
+
+Create a directory <ims_node> in OpenYuma-master/netconf/test/modules/build-sil
+
+Move the <ims_node>.c to OpenYuma-master/netconf/test/modules/build-sil/<ims_node> and build it.
+A <ims_node>.so  will be generated.
+
+Copy the .so to /usr/lib/yuma and the yang file to /usr/share/yuma/modules in the corresponding IMS node.
+
+Run the netconf server in the IMS node
+     netconfd --superuser=<username> --log-level=debug module=<ims_node>
+
+
+Step 4: Final Image
+-------------------
+
+Store the image with contains the above configuration.
+
+Upload it in the glance and mention the image uuid in VNF Descriptor( vnfd_Ims.yaml) or
+
+Mention the path of the image in VNF Descriptor( vnfd_Ims.yaml)
+
+
+Step 5: Installation of ncclient
+--------------------------------
+
+ncclient is a Python library that facilitates client-side scripting and application development around the NETCONF protocol.
+
+On host machine install ncclient (pip install ncclient)
+
+Please refer ims_netconf.py under vnfsvc_examples/Ims/drivers for the Netconf xml configuration.
+
+
+Step 6: Drivers
+---------------
+
+A driver for each IMS component has to be placed in vnfmanager/drivers/ which pushes the required configuration dynamically on the deployed nodes. Please refer vnfsvc_examples/Ims/drivers/ellis_driver.py.
+
+And the driver path has to be updated in VNF descriptor(vnfd_Ims.yaml)
+
+
+Step 7: Softphone installation
+------------------------------
+
+To verify the deployed IMS service, install zoiper (softphone application) on ubuntu12.04 virtual machine
+Save the image and upload to glance.
+
+Update the zoiper image uuid in heat.yaml under zoiper_1 and zoiper_2 tags.
+The heat.yaml is placed in vnfsvc_examples/Ims/templates under zoiper_1 and zoiper_2 

@@ -1,0 +1,80 @@
+nsd:
+  name: Ims_template
+  vendor: ETSI
+  description: "Ims service"
+  version: "1.0"
+ 
+  endpoints:
+    apn-router-gateway:
+      end-point-id: Router-gateway
+      description: Router gateway
+    apn-webserver:
+      end-point-id: WebServer
+      vnf : vLB:pkt_in
+      description: web server
+  
+  flavours:
+    Silver:
+      flavour-id: Silver
+      description: "Silver Service flavour"
+      monitoring:
+         param-id: "num-requests"
+         description: "Number of http requests load balancer can handle"
+      assurance-params:
+        param-id: "num-requests"
+        value: 1000
+      member-vnfs:
+        - name: Ims
+          member-vdu-id: vHS
+        - name: Ims
+          member-vdu-id: vBono
+          dependency: Ims:vSprout
+        - name: Ims
+          member-vdu-id: vSprout
+          dependency:
+            - Ims:vHomer
+            - Ims:vHS
+        - name: Ims
+          member-vdu-id: vHomer
+        - name: Ims
+          member-vdu-id: vEllis
+          dependency:
+            - Ims:vHomer
+            - Ims:vHS
+      member-vlds:
+        mgmt-if:
+          property: internal
+          member-vnfs:
+            Ims:vHomer:
+              connection-point: 'mgmt-if'
+            Ims:vHS:
+              connection-point: 'mgmt-if'
+            Ims:vEllis:
+              connection-point: 'mgmt-if'
+            Ims:vSprout:
+              connection-point: 'mgmt-if'
+            Ims:vBono:
+              connection-point: 'mgmt-if'
+        private:
+          property: internal
+          member-vnfs:
+            Ims:vHomer:
+              connection-point: 'private'
+            Ims:vHS:
+              connection-point: 'private'
+            Ims:vEllis:
+              connection-point: 'private'
+            Ims:vSprout:
+              connection-point: 'private'
+            Ims:vBono:
+              connection-point: 'private'
+          Router: apn-router-gateway
+      forwarding-graphs:
+        WebAccess:
+          direction: bidirection
+          network-forwarding-path:
+            - name: apn-router-gateway
+              type: endpoint
+            - name: Ims:vBono
+              type: vnf
+              connection-point: private

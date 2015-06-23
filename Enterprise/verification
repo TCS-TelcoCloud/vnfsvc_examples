@@ -1,0 +1,10 @@
+Service verification
+--------------------
+
+Open the console of user-vm.
+
+Check whether IP has been configured properly in user-vm.
+
+Check the reachabilty of loadbalancer from user-vm. (ping <loadbalancer private-ip>)
+      
+Execute curl http://<loadbalancer private-ip>:8080 , should be able to access the webpage in the Application server.

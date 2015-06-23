@@ -1,0 +1,44 @@
+module haproxy{
+        namespace "http://netconfcentral.org/ns/haproxy";
+    prefix "haproxy";
+
+    revision 2014-12-09 {
+        description "Initial revision.";
+    }
+
+        container haproxy {
+        description
+        "configuration parameters for haproxy load balancers";
+        container frontend {
+                leaf name {
+                type string;
+                }
+                leaf bind{
+                type string;
+                }
+                leaf default_backend {
+                type string;
+                }
+
+        }
+        container backend {
+                leaf name {
+                type string;
+                }
+                leaf mode {
+                type string;
+                }
+
+                leaf balance {
+                type string;
+                }
+                leaf IPAddress {
+                type string;
+                }
+                leaf action {
+                type string;
+                }
+
+        }
+
+}

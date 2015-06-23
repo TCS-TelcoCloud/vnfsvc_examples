@@ -1,0 +1,94 @@
+Install ubuntu14.04 on a virtual machine with 4GB RAM and 8GB hard disk.
+Ensure that this has internet connectivity.
+Follow the below steps to build a haproxy node:
+
+Step 1:
+--------
+
+The following debian packages must be installed in the VM:
+------------------------------------------------------
+
+libssh2-1_1.2.6-1_amd64.deb       
+perl-base_5.20.1-4_amd64.deb  
+yuma_2.2-5.tar.gz
+haproxy_1.5.9-1_amd64.deb         
+libssh2-1-dev_1.2.6-1_amd64.deb          
+yuma_2.2-5_amd64.changes      
+yuma-dev_2.2-5_all.deb
+init-system-helpers_1.22_all.deb  
+libxml2_2.7.8.dfsg-2+squeeze8_amd64.deb  
+yuma_2.2-5_amd64.deb          
+yuma-doc_2.2-5_all.deb
+libpcre3_8.35-3.3_amd64.deb       
+OpenYuma-master.zip 
+yuma_2.2-5.dsc
+
+
+Step 2: NETCONF installation
+----------------------------
+
+Clone the OpenYuma repository from “https://github.com/OpenClovis/OpenYuma” and do the following:
+     - cd OpenYuma-master
+     - make
+     - sudo make install
+     - Edit /etc/ssh/sshd_config add the following lines:
+           Port 22
+           Port 830
+           Subsystem netconf /usr/sbin/netconf-subsystem
+     - Restart ssh service
+           sudo /etc/init.d/ssh restart
+
+
+Step 3: Building library for Haproxy
+------------------------------------
+
+Create a directory 'modules' and do the below steps in this directory
+
+Write a yang file (<haproxy>.yang) based on the configuration required.
+Please refer haproxy.yang under vnfsvc_examples/enterprise.
+
+Generate a header file from haproxy.yang
+    yangdump haproxy.yang --format=h --output=haproxy.h
+
+Generate C file from the yang data model
+    yangdump haproxy.yang --format=c --output=haproxy.c
+
+Modify the code in haproxy.c according to the required configuration
+
+Create a directory 'haproxy' in OpenYuma-master/netconf/test/modules/build-sil
+
+Move the contents under 'modules' to OpenYuma-master/netconf/test/modules/build-sil/haproxy/ and build it.
+A haproxy.so  will be generated. 
+
+Copy the .so to /usr/lib/yuma and the yang file to /usr/share/yuma/modules.
+
+Run the netconf server
+    netconfd --superuser=username –log-level=debug module=haproxy
+
+
+Step 4: Final Image
+-------------------
+
+Store the image with contains the above configuration.
+
+Upload it in the glance and mention the image uuid in VNF Descriptor( vnfd_vLB.yaml) or
+
+Mention the path of the image in VNF Descriptor( vnfd_vLB.yaml)
+
+
+Step 5: Installation of ncclient
+--------------------------------
+
+ncclient is a Python library that facilitates client-side scripting and application development around the NETCONF protocol.
+
+On host machine install ncclient (pip install ncclient)
+
+Please refer haproxy_netconf.py under vnfsvc_examples/Enterprise/drivers for the Netconf xml configuration.
+
+
+Step 6: Drivers
+---------------
+
+A driver for each IMS component has to be placed in vnfmanager/drivers/ which pushes the required configuration dynamically on the deployed nodes. Please refer vnfsvc_examples/enterprise/vLB.yaml.
+
+And the driver path has to be updated in VNF descriptor(vnfd_vLB.yaml)

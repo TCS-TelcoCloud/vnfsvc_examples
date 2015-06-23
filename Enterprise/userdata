@@ -1,0 +1,3 @@
+runcmd:
+ - sudo netconfd superuser=<username> module=<module name>
+

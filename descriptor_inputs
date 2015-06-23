@@ -1,0 +1,14 @@
+The following input will help in understanding the values to be filled in the descriptors:
+---------------------------------------------------------------------------------------------
+
+1)deployment_artifact: Specify path of the userdata file
+
+2)driver: Specify the class path to the specific driver which is placed under vnfmanager/drivers
+
+3)image: Specify path of the image
+
+4)image-id: Specifiy image uuid present in glance
+
+5)Under vm-spec, the values of min_ram, min_disk, username, password, storage, total-memory-mb has to be updated as per requirements
+
+NOTE: Either image or image-id has to be specified but not both.

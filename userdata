@@ -1,3 +1,0 @@
-runcmd:
- - sudo netconfd superuser=tcs module=haproxy
-

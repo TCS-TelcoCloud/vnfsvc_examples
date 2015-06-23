@@ -1,0 +1,38 @@
+Service verification
+--------------------
+
+Open the console of zoiper instances.
+
+Check whether IP has been configured properly in both the instances.
+
+Check the reachabilty to Ellis. (ping <Ellis private-ip>) [ If no rechabilitiy the deployment of the service went wrong ]
+ 
+SIGNUP
+------
+
+1. Enter Ellis node ip in the url (http://<ellis-ip>)
+2. Click on the Signup
+3. Enter Name, Password, Email, Signup code and click on "Sign up"
+4. Note the account name and password created. (Ex: 6505550XXX@test.com, Password:YYYYYYY)
+
+ZOIPER Configuration and Verification
+-------------------------------------
+1. Click on zoiper icon
+ 
+2. Fill in the following details:-
+      Account name: 6505550XXX@test.com
+      Host: the root domain of your Clearwater deployment
+      Username: 6505550XXX
+      Password: YYYYYYY
+      Authentication user: 6505550XXX@test.com
+      Outbound proxy: <SIP PROXY>
+
+3. Click 'Network Settings' and fill in the following details:
+      Transport type: TCP/UDP     
+      STUN Server: <Server ip>
+4. Hit Save
+5. If your account was successfully enabled you should see a green tick notification
+6. Go back to the main Config menu and select Codecs
+7. Unselect everything except uLaw and aLaw.
+8. Hit Save
+9. You are now ready to make calls.

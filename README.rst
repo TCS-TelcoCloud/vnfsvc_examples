@@ -6,18 +6,22 @@ OpenVNFManager installation
 
     $ Verify if vnfsvc_examples folder was cloned. Folder should exist in local machine with matching contents.
 
-    $ Refer to the file "haproxy_configuration" and prepare a loadbalancer image.
+    $ Refer enterprise or Ims folder to deploy respective service.
+
+    $ Refer the configuration files (under haproxy or Ims)to build the images.
 
     $ Update the nsd and vnfd templates(exists in vnfsvc_examples) path in /etc/vnfsvc/templates.json 
 
-    $ Update the loadbalancer and webserver image(exists in sample_templates) paths in vnfd_vLB.yaml and vnfd_vAS.yaml for flavor "Silver" as indicated in the templates.
+    $ Update the VNF descriptors(exists in respective usecase folders) with image paths or image uuid (if uploaded in glance) for flavor "Silver" as indicated in the templates.
 
-    $ Update the userdata(exists in vnfsvc_examples) path under deployment_artifact tag for "Silver" flavor in vnfd_vLB.yaml 
+    $ Update the userdata(exists in vnfsvc_examples) file path if any under deployment_artifact tag for "Silver" flavor in VNF descriptors
 
     $ Update the image(any desktop image) and flavor details under user_instance tag in heat.yaml
 
+    $ Refer descriptor_inputs file under vnfsvc_examples if any field in VNF Descriptor has to be updated
+
     $ Upload the heat.yaml to HEAT.Enter the values given below for heat template attributes before uploading it.
-         name - webservice
+         name - <service name> (Ims/webservice)
          flavor - Silver
          private - 192.168.1.0/24 (Any IPv4 CIDR)
          mgmt-if - 192.168.3.0.24 (Any IPv4 CIDR)
@@ -32,10 +36,4 @@ OpenVNFManager installation
       After receiving the acknowledgement by VNFSVC service, it will resolve the next level of dependencies and then deploy those.
       This will be repeated until all the mentioned VNFS are deployed.
 
-    $ Open the console of user-vm.
-
-    $ Check whether IP has been configured properly in user-vm.
-
-    $ Check the reachabilty of loadbalancer from user-vm. (ping <loadbalancer private-ip>)
-      
-    $ Execute curl http://<loadbalancer private-ip>:8080 , should be able to access the webpage in the Application server.
+    $ Refer verification file in respective folders and follow the mentioned steps to verify the deployed Network Service.

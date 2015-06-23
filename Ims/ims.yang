@@ -1,0 +1,73 @@
+module ims{
+        namespace "http://netconfcentral.org/ns/ims";
+    prefix "ims";
+
+    revision 2014-12-09 {
+        description "Initial revision.";
+    }
+
+        container ims {
+        description
+        "configuration parameters for IMS";
+        container privateip {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+        container publicip {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+        container Sprout {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+        container Homer {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+        container Homestead {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+        list Service {
+                leaf name {
+                type string;
+                }
+
+        }
+        container chronos {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+        container ClusterSettings {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+        container Configure {
+                leaf name {
+                type string;
+                }
+
+        }
+        container restund {
+                leaf Ipaddress {
+                type string;
+                }
+
+        }
+}
+}

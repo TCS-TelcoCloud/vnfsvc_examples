@@ -1,0 +1,36 @@
+ellis_settings = """
+   <config>
+      <ims xmlns="http://netconfcentral.org/ns/ims">
+        <privateip>
+          <Ipaddress 
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+            nc:operation="replace">{private_ip}</Ipaddress>
+        </privateip>
+        <publicip>
+          <Ipaddress 
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+            nc:operation="replace">{public_ip}</Ipaddress>
+        </publicip>
+        <chronos>
+          <Ipaddress 
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+            nc:operation="replace">{chronos_ip}</Ipaddress>
+        </chronos>
+        <Homer>
+          <Ipaddress 
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+            nc:operation="replace">{homer_ip}</Ipaddress>
+        </Homer>
+        <Homestead>
+          <Ipaddress 
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+            nc:operation="replace">{homestead_ip}</Ipaddress>
+        </Homestead>
+        <Service>
+          <name 
+            xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+            nc:operation="replace">{service_name}</name>
+        </Service>
+      </ims>
+    </config>
+"""
